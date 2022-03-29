@@ -177,7 +177,7 @@ function activate(context) {
 
         const editorConfiguration = vscode.workspace.getConfiguration('editor', null)
         const newDefaultRenderWhitespace = editorConfiguration.get('renderWhitespace', 'none') || 'selection'
-        const newDefaultWordWrap = editorConfiguration.get('wordWrap', 'none') || 'off'
+        const newDefaultWordWrap = editorConfiguration.get('wordWrap', 'off') || 'off'
 
         const filesConfiguration = vscode.workspace.getConfiguration('files', null)
         const newDefaultEol = filesConfiguration.get('eol', 'auto') || 'auto'
