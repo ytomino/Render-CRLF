@@ -179,7 +179,7 @@ function activate(context) {
                     }
                 }
             }
-            if (highlightExtraWhitespace) {
+            if (highlightExtraWhitespace && (!line.isEmptyOrWhitespace || i == endLine)) {
                 const lastWhitespace = line.text.search('\\s+$')
                 if (lastWhitespace >= 0) {
                     extraWhitespaceDecorations.push({
