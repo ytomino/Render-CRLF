@@ -50,8 +50,6 @@ function activate(context) {
 
         const startTime = isDebug ? new Date().getTime() : null
         const document = editor.document
-        // @ts-ignore
-        const id = editor.id
 
         const [
             renderWhitespace,
@@ -66,6 +64,12 @@ function activate(context) {
             forceShowOnWordWrap
         ] = getDocumentSettings(editor.document)
         const shouldRenderEOL = (renderWhitespace !== 'none') && (renderWhitespace !== 'boundary') || (forceShowOnWordWrap && (wordWrap !== 'off'))
+
+        if (!shouldRenderEOL && !highlightExtraWhitespace) { return }
+
+        // @ts-ignore
+        const id = editor.id
+
         const shouldRenderOnlySelection = (renderWhitespace === 'selection')
 
         const lineEnding = document.eol
