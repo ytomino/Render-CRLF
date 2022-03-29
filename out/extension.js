@@ -128,32 +128,32 @@ function activate(context) {
         var eolDecorations = []
         var extraWhitespaceDecorations = []
 
-        if (shouldRenderEOL) {
-            const selections = editor.selections
+        const selections = editor.selections
 
-            //determine what is exactly visible
-            let visibleRanges = (ranges == null) ? editor.visibleRanges : ranges
-            if (isDebug) { console.debug(new Date().getTime() + '   renderDecorations() visible ranges are from line ' + visibleRanges[0].start.line + ' to ' + visibleRanges[0].end.line) }
-            let startOffset = document.offsetAt(visibleRanges[0].start)
-            let endOffset = document.offsetAt(visibleRanges[0].end)
-            for(let i=1; i<visibleRanges.length; i++) {
-                let nextStartOffset = document.offsetAt(visibleRanges[i].start)
-                let nextEndOffset = document.offsetAt(visibleRanges[i].end)
-                if (startOffset > nextStartOffset) { startOffset = nextStartOffset }
-                if (endOffset < nextEndOffset) { endOffset = nextEndOffset }
-            }
+        //determine what is exactly visible
+        let visibleRanges = (ranges == null) ? editor.visibleRanges : ranges
+        if (isDebug) { console.debug(new Date().getTime() + '   renderDecorations() visible ranges are from line ' + visibleRanges[0].start.line + ' to ' + visibleRanges[0].end.line) }
+        let startOffset = document.offsetAt(visibleRanges[0].start)
+        let endOffset = document.offsetAt(visibleRanges[0].end)
+        for(let i=1; i<visibleRanges.length; i++) {
+            let nextStartOffset = document.offsetAt(visibleRanges[i].start)
+            let nextEndOffset = document.offsetAt(visibleRanges[i].end)
+            if (startOffset > nextStartOffset) { startOffset = nextStartOffset }
+            if (endOffset < nextEndOffset) { endOffset = nextEndOffset }
+        }
 
-            let startPosition = document.positionAt(startOffset)
-            let endPosition = document.positionAt(endOffset)
+        let startPosition = document.positionAt(startOffset)
+        let endPosition = document.positionAt(endOffset)
 
-            let startLine = Number(document.lineAt(startPosition).lineNumber)
-            let endLine = Number(document.validatePosition(endPosition.translate(2, 0)).line)
-            if (startLine > 0) { startLine -= 1 } //in case of partial previous line
-            if (isDebug) { console.debug(new Date().getTime() + '   renderDecorations() rendering from line ' + startLine + ' to ' + endLine) }
+        let startLine = Number(document.lineAt(startPosition).lineNumber)
+        let endLine = Number(document.validatePosition(endPosition.translate(2, 0)).line)
+        if (startLine > 0) { startLine -= 1 } //in case of partial previous line
+        if (isDebug) { console.debug(new Date().getTime() + '   renderDecorations() rendering from line ' + startLine + ' to ' + endLine) }
 
-            for (let i=startLine; i<=endLine; i++) {
-                var line = document.lineAt(i)
-                if (i != endLine) {
+        for (let i=startLine; i<=endLine; i++) {
+            var line = document.lineAt(i)
+            if (i != endLine) {
+                if (shouldRenderEOL) {
                     const eolPosition = line.range.end
                     let shouldDecorate = false
                     if (shouldRenderOnlySelection) { //check if decoration falls within selection
@@ -178,20 +178,20 @@ function activate(context) {
                         })
                     }
                 }
-                if (highlightExtraWhitespace) {
-                    const lastWhitespace = line.text.search('\\s+$')
-                    if (lastWhitespace >= 0) {
-                        extraWhitespaceDecorations.push({
-                            range: new vscode.Range(new vscode.Position(line.range.end.line, lastWhitespace), line.range.end)
-                        })
-                    }
+            }
+            if (highlightExtraWhitespace) {
+                const lastWhitespace = line.text.search('\\s+$')
+                if (lastWhitespace >= 0) {
+                    extraWhitespaceDecorations.push({
+                        range: new vscode.Range(new vscode.Position(line.range.end.line, lastWhitespace), line.range.end)
+                    })
                 }
             }
         }
 
         if (isDebug) { console.debug(new Date().getTime() + '   renderDecorations() ready for decorating in ' + (new Date().getTime() - startTime) + ' ms') }
 
-        if (editor.setDecorations) { editor.setDecorations(eolDecorationType, eolDecorations) }
+        if (editor.setDecorations && shouldRenderEOL ) { editor.setDecorations(eolDecorationType, eolDecorations) }
         if (editor.setDecorations && highlightExtraWhitespace) { editor.setDecorations(extraWhitespaceDecorationType, extraWhitespaceDecorations) }
 
         if (isDebug) { console.debug(new Date().getTime() + '   renderDecorations() finished in ' + (new Date().getTime() - startTime) + ' ms') }
