@@ -62,7 +62,7 @@ function activate(context) {
             highlightExtraWhitespace,
             decorateBeforeEol,
             forceShowOnWordWrap
-        ] = getDocumentSettings(editor.document)
+        ] = getDocumentSettings(document)
         const shouldRenderEOL = (renderWhitespace !== 'none') && (renderWhitespace !== 'boundary') || (forceShowOnWordWrap && (wordWrap !== 'off'))
 
         if (!shouldRenderEOL && !highlightExtraWhitespace) { return }
