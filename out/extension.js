@@ -112,7 +112,7 @@ function activate(context) {
             // Otherwise, the whitespace is rendered as an overlay, so the whitespace text cannot be colored
             const extraWhitespaceDecorationOptions =
                 experimentalWhitespaceRendering === 'off'
-                    ? { color: themeColorError }
+                    ? { after: { contentText: '' }, textDecoration: 'underline dotted var(--vscode-editorError-foreground)' }
                     : { textDecoration: 'underline dotted var(--vscode-editorError-foreground)' }
             extraWhitespaceDecorationOptions.rangeBehavior = vscode.DecorationRangeBehavior.ClosedClosed
             extraWhitespaceDecorationType = vscode.window.createTextEditorDecorationType(extraWhitespaceDecorationOptions)
